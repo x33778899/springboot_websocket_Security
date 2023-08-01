@@ -9,6 +9,11 @@ body {
 h1 {
     text-align: center;
 }
+label, span {
+    font-size: 20px;
+    font-family: "sans-serif";
+    font-weight: bold;
+}
 
 #conversation {
     border: 1px solid #ccc;

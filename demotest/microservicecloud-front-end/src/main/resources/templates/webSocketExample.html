@@ -5,33 +5,33 @@
     <link rel="stylesheet" href="/css/webSocketExampleStyle.css">
 </head>
 <body>
-    <h1>Welcome!</h1>
-    <div th:if="${token != null}">
-        <h1>WebSocket Example</h1>
-        <label for="username">Username:</label>
-        <input type="hidden" id="username" th:value="${account}" readonly>
-        <input type="hidden" id="jwtToken" th:value="${token}" readonly>
-        <button id="connect">Connect</button>
-        <button id="disconnect" disabled>Disconnect</button>
-        <div id="conversation" style="height: 200px; overflow-y: scroll;">
-            <h2>User Info</h2>
-            <ul id="userinfo"></ul>
-        </div>
-        <textarea id="message" placeholder="Enter message"></textarea>
-        <button id="sendMessage" disabled>Send Message</button>
-
-        <label for="recipient">Recipient:</label>
-        <input type="text" id="recipient" placeholder="Recipient's username">
-        <textarea id="privateMessage" placeholder="Enter private message" disabled></textarea>
-        <button id="sendPrivateMessage" disabled>Send Private Message</button>
-
-        <script src="/webjars/sockjs-client/sockjs.min.js"></script>
-        <script src="/webjars/stomp-websocket/stomp.min.js"></script>
-        <script src="/js/jquery-3.1.0.min.js"></script>
-        <script src="/js/app.js"></script>
-    </div>
-    <div th:unless="${token != null}">
-        <p>Please log in to access this page.</p>
-    </div>
+	<h1>Welcome!</h1>
+	<div th:if="${token != null}">
+	    <h1>WebSocket Example</h1>
+	    <label  for="username">使用者:<span th:text="${account}"></span></label>
+	    <input type="hidden" id="username" th:value="${account}" readonly>
+	    <input type="hidden" id="jwtToken" th:value="${token}" readonly>
+	    <button id="connect">Connect</button>
+	    <button id="disconnect" disabled>Disconnect</button>
+	    <div id="conversation" style="height: 200px; overflow-y: scroll;">
+	        <ul id="userinfo"></ul>
+	    </div>
+	    <select id="messageType">
+	        <option value="public">Public Message</option>
+	        <option value="private">Private Message</option>
+	    </select>
+	    <label id=recipienttext for="recipient">密語對象:</label>
+	    <input type="text" id="recipient" placeholder="Recipient's username">
+	    <textarea id="message" placeholder="Enter message"></textarea>
+	    <button id="sendMessage" disabled>Send Message</button>
+	
+	    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+	    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+	    <script src="/js/jquery-3.1.0.min.js"></script>
+	    <script src="/js/app.js"></script>
+	</div>
+	<div th:unless="${token != null}">
+	    <p>Please log in to access this page.</p>
+	</div>
 </body>
 </html>
