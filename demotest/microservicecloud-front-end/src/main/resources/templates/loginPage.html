@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" href="/css/loginPageStyle.css"> <!-- 添加CSS文件引用 -->
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-title">Login</div>
+        <input class="login-input" type="text" placeholder="Username" id="account">
+        <input class="login-input" type="password" placeholder="Password" id="password">
+        <button class="login-button" onclick="login()">Login</button>
+    </div>
+
+<script>
+    function login() {
+        var account = document.getElementById('account').value;
+        var password = document.getElementById('password').value;
+
+        // 构造登录请求的参数
+        var data = {
+            account: account,
+            password: password
+        };
+
+        // 阻止表单默认提交行为
+        event.preventDefault();
+
+        // 发送POST请求到登录接口
+        fetch('http://localhost:8083/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data),
+            credentials: 'include' // Include credentials in the request
+        })
+        .then(response => {
+            // Check if the response status is ok
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Check if login was successful
+            if (data.loginSuccess) {
+                // Assuming the token is available in the response
+                const token = data.token;
+
+                // Save the token to localStorage
+                localStorage.setItem('token', token);
+
+                // Redirect to /showWebSocketExample page with token as a query parameter
+                window.location.href = `http://localhost:8083/showWebSocketExample?token=${token}`;
+            } else {
+                // Display login error message
+                alert(data.errorMessage);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            // Handle any other errors
+        });
+    }
+</script>
+</body>
+</html>
