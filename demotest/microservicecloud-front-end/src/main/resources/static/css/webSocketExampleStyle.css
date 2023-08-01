@@ -8,11 +8,20 @@ body {
 
 h1 {
     text-align: center;
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 30px;
 }
+
 label, span {
-    font-size: 20px;
-    font-family: "sans-serif";
+    font-size: 16px;
+    font-family: "Arial", sans-serif;
     font-weight: bold;
+    color: #555;
+}
+
+#recipienttext {
+    margin-right: 10px;
 }
 
 #conversation {
@@ -21,6 +30,8 @@ label, span {
     padding: 10px;
     display: none;
     margin-bottom: 20px;
+    border-radius: 4px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 #userinfo {
@@ -43,15 +54,21 @@ label, span {
 }
 
 button {
-    padding: 8px 15px;
-    background-color: #4CAF50;
+    padding: 10px 20px;
+    background-color: #007BFF;
     color: #fff;
     border: none;
     cursor: pointer;
     border-radius: 4px;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
 }
 
 button:disabled {
     background-color: #ccc;
     cursor: not-allowed;
+}
+
+button:hover {
+    background-color: #0056b3;
 }
