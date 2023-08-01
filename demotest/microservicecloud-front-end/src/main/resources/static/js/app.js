@@ -83,7 +83,7 @@
         stompClient.send(
             "/app/private",
             {},
-            JSON.stringify({ 'senderUsername': getUsername(), 'recipientUsername': recipient, 'message': privateMessage })
+            JSON.stringify({ 'senderUsername': getUsername(), 'recipientUsername': recipient, 'message': getUsername()+" : "+privateMessage })
         );
 
         // Clear the private message input field after sending the message
@@ -91,14 +91,10 @@
     }
 
 	function showGreeting(message, messageType) {
-	    try {
-	        var parsedMessage = JSON.parse(message);
-	        $("#userinfo").append("<tr><td>" + messageType + "</td><td>" + parsedMessage.content + "</td></tr>");
-	    } catch (e) {
-	        // If the message is not valid JSON, display it as is
-	        console.error('Error parsing JSON message: ' + e);
-	        $("#userinfo").append("<tr><td>" + messageType + "</td><td>" + message + "</td></tr>");
-	    }
+
+      $("#userinfo").append("<tr><td>" + messageType + "</td><td>" + message + "</td></tr>");
+
+
 	}
 
     // Function to get the username from the input field

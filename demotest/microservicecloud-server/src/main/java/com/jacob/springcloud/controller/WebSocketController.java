@@ -11,6 +11,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jacob.springcloud.dto.PrivateMessage;
 import com.jacob.springcloud.dto.UserMessage;
@@ -47,26 +48,31 @@ public class WebSocketController {
 	    String recipientUsername = privateMessage.getRecipientUsername();
 	    String messageContent = privateMessage.getMessage();
 
-	    // Create a JSON object containing the message content
+	    // Create a JSON object containing the message content and sender username
 	    Map<String, String> message = new HashMap<>();
+	    message.put("senderUsername", senderUsername);
 	    message.put("content", messageContent);
 	    
-	    System.out.println("message	"+message);
+	    System.out.println(message);
+	    // Convert the message map to JSON
+	    String jsonMessage;
+	    try {
+	        jsonMessage = objectMapper.writeValueAsString(message);
+	        System.out.println("jsonMessage	"+jsonMessage);
+	    } catch (JsonProcessingException e) {
+	        System.err.println("Error converting message to JSON: " + e.getMessage());
+	        return;
+	    }
 
-	    // TODO: Implement logic to send a private message to the recipient
-	    // Example: You can use senderUsername, recipientUsername, and message to send the private message.
-	    // For example, you can store the messages in a database and notify the recipient through their WebSocket connection.
-
-	    // In this example, we'll simply print the private message to the console.
 	    System.out.println("Private Message: From " + senderUsername + " to " + recipientUsername + ": " + messageContent);
 
 	    // Send the private message to the recipient's WebSocket
 	    String recipientTopic = "/topic/private/" + recipientUsername;
-	    messagingTemplate.convertAndSend(recipientTopic, message);
+	    messagingTemplate.convertAndSend(recipientTopic, jsonMessage);
 
 	    // Send the private message to the sender's WebSocket
 	    String senderTopic = "/topic/private/" + senderUsername;
-	    messagingTemplate.convertAndSend(senderTopic, message);
+	    messagingTemplate.convertAndSend(senderTopic, jsonMessage);
 	}
 
 
