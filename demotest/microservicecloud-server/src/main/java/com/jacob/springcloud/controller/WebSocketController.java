@@ -30,8 +30,8 @@ public class WebSocketController {
         this.messagingTemplate = messagingTemplate;
     }
 
-    // 保留WebSocket部分
-	@MessageMapping("/user")
+    // 公開頻道
+	@MessageMapping("/public")
 	@SendTo("/topic/user")
 	public WebSocketResponse getUser(UserMessage user, @RequestParam("token") String token) {
 	    String message = user.getUsername() + " : " + user.getMessage();
@@ -41,7 +41,8 @@ public class WebSocketController {
 
 
 	private final ObjectMapper objectMapper = new ObjectMapper();
-
+	
+	//私人頻道
 	@MessageMapping("/private")
 	public void sendPrivateMessage(PrivateMessage privateMessage) {
 	    String senderUsername = privateMessage.getSenderUsername();

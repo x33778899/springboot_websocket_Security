@@ -53,6 +53,7 @@ function disconnect() {
             setConnected(false);
             stompClient = null; // Reset stompClient after disconnecting
             $("#messageType").hide();
+            $("#message").val("");
             recipientInput.hide();
             recipientText.hide();
         });
@@ -75,7 +76,7 @@ function sendMessage() {
     console.log("Message: " + message);
 
     if (messageType === "public") {
-        stompClient.send("/app/user", {}, JSON.stringify({ 'username': getUsername(), 'message': message }));
+        stompClient.send("/app/public", {}, JSON.stringify({ 'username': getUsername(), 'message': message }));
     } else if (messageType === "private") {
         let recipient = $("#recipient").val();
         stompClient.send(
@@ -94,12 +95,79 @@ function showGreeting(message, messageType) {
     let conversationDiv = $("#conversation");
     let isScrolledToBottom = conversationDiv.scrollTop() + conversationDiv.innerHeight() >= conversationDiv[0].scrollHeight;
 
-    userinfoDiv.append("<tr><td>" + messageType + "</td><td>" + message + "</td></tr>");
+    // Check if the message length is greater than 40 characters
+    if (getStringLength(message) > 40) {
+        // Split the message into chunks of 40 characters and join them with a line break
+        let splitMessage = splitString(message, 40).join("<br>");
+        userinfoDiv.append("<tr><td>" + messageType + "</td><td>" + splitMessage + "</td></tr>");
+    } else {
+        // If the message is less than or equal to 40 characters, display it normally
+        userinfoDiv.append("<tr><td>" + messageType + "</td><td>" + message + "</td></tr>");
+    }
 
     // Scroll to the bottom of the conversation div if already at the bottom before adding a new message
     if (isScrolledToBottom) {
         conversationDiv.scrollTop(conversationDiv[0].scrollHeight);
     }
+}
+
+function showGreeting(message, messageType) {
+    let userinfoDiv = $("#userinfo");
+    let conversationDiv = $("#conversation");
+    let isScrolledToBottom = conversationDiv.scrollTop() + conversationDiv.innerHeight() >= conversationDiv[0].scrollHeight;
+
+    // Check if the message length is greater than 50 characters
+    if (getStringLength(message) > 50) {
+        // Split the message into chunks of 50 Unicode characters and join them with a line break
+        let splitMessage = splitUnicodeString(message, 50).join("<br>");
+        userinfoDiv.append("<tr><td>" + messageType + "</td><td style='word-break: break-all;'>" + splitMessage + "</td></tr>");
+    } else {
+        // If the message is less than or equal to 50 characters, display it normally
+        userinfoDiv.append("<tr><td>" + messageType + "</td><td>" + message + "</td></tr>");
+    }
+
+    // Scroll to the bottom of the conversation div if already at the bottom before adding a new message
+    if (isScrolledToBottom) {
+        conversationDiv.scrollTop(conversationDiv[0].scrollHeight);
+    }
+}
+
+// Function to get the length of a string (accounting for Unicode characters)
+function getStringLength(str) {
+    let count = 0;
+    for (let i = 0; i < str.length; i++) {
+        let charCode = str.charCodeAt(i);
+        // Chinese characters have charCode greater than 255
+        count += charCode > 255 ? 2 : 1;
+    }
+    return count;
+}
+
+// Function to split a Unicode string into chunks of a given length
+function splitUnicodeString(str, chunkSize) {
+    let chunks = [];
+    let currentChunk = '';
+    let currentChunkLength = 0;
+
+    for (let i = 0; i < str.length; i++) {
+        let charCode = str.charCodeAt(i);
+        let charLength = charCode > 255 ? 2 : 1;
+
+        if (currentChunkLength + charLength > chunkSize) {
+            chunks.push(currentChunk);
+            currentChunk = '';
+            currentChunkLength = 0;
+        }
+
+        currentChunk += str[i];
+        currentChunkLength += charLength;
+    }
+
+    if (currentChunk !== '') {
+        chunks.push(currentChunk);
+    }
+
+    return chunks;
 }
 
 // Function to get the username from the input field

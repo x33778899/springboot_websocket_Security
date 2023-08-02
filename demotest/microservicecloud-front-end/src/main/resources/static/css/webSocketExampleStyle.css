@@ -1,9 +1,5 @@
 body {
     font-family: Arial, sans-serif;
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #f7f7f7;
 }
 
 h1 {
@@ -22,6 +18,7 @@ label, span {
 
 #recipienttext {
     margin-right: 10px;
+    margin-top: 10px;
 }
 
 #conversation {
@@ -33,7 +30,9 @@ label, span {
     border-radius: 4px;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
-
+td {
+     white-space: nowrap;
+}
 #userinfo {
     list-style: none;
     padding: 0;
