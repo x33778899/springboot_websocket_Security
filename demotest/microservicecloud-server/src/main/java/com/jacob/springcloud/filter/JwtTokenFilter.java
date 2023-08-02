@@ -38,23 +38,22 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         String requestURI = request.getRequestURI();
 
 
-        //放行WebSocket连接的请求
-        // 放行WebSocket连接的请求
+       //放行WebSocket連接的請求
         if (requestURI.contains("/websocket-example")) {
-            System.out.println("WebSocket connection request to " + requestURI + " is allowed.");
+//            System.out.println("WebSocket connection request to " + requestURI + " is allowed.");
             chain.doFilter(request, response);
             return;
         }
 
 
-        //放行路径
+        //放行路徑
         if (requestURI.equals(REGISTER_URL.getUrl()) || requestURI.equals(LOGIN_URL.getUrl()) ||
                  requestURI.equals(LOGINPAGE_URL.getUrl())) {
             chain.doFilter(request, response);
             return;
         }
         
-        // 放行静态资源 (JS, CSS, images, etc.)
+        // 放行靜態資源 (JS, CSS, images, etc.)
         if (requestURI.endsWith(".js") || requestURI.endsWith(".css") || requestURI.endsWith(".jpg") || requestURI.endsWith(".png")) {
             chain.doFilter(request, response);
             return;
@@ -65,19 +64,19 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 //        System.out.println("requestURI    " + requestURI);
 //        System.out.println("token    " + request.getParameter("token"));
 
-        // 判断token，优先使用Authorization header中的token
+        // 判斷token，優先使用Authorization header中的token
         String token = null;
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            // Extract the token without the "Bearer " prefix
+            // 取得標頭為	"Bearer " 前輟
             token = authorizationHeader.substring(7);
         } else {
-            // Check if the token is available as a query parameter
+            // 檢查參數token
             token = request.getParameter("token");
         }
 
-        // 如果token存在，进行验证
+     // 如果token存在，進行驗證
         if (token != null) {
-            // 从Redis检查
+        	// 從Redis檢查
             if (!jwtTokenUtil.isTokenExpired(token) && redisTokenRepository.isTokenValid(token)) {
                 // If the token is valid, get the username and user role from it
                 String username = jwtTokenUtil.getUsername(token);

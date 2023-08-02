@@ -48,12 +48,11 @@ public class WebSocketController {
 	    String recipientUsername = privateMessage.getRecipientUsername();
 	    String messageContent = privateMessage.getMessage();
 
-	    // Create a JSON object containing the message content and sender username
+	    // 產生json 格式的物件
 	    Map<String, String> message = new HashMap<>();
 	    message.put("senderUsername", senderUsername);
 	    message.put("content", messageContent);
 	    
-	    System.out.println(message);
 	    // Convert the message map to JSON
 	    String jsonMessage;
 	    try {

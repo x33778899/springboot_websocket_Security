@@ -1,5 +1,7 @@
 let stompClient = null;
-
+$("#messageType").hide();
+let recipientInput = $("#recipient");
+let recipientText = $("#recipienttext");
 function setConnected(connected) {
     $("#connect").prop("disabled", connected);
     $("#disconnect").prop("disabled", !connected);
@@ -21,6 +23,10 @@ function connect() {
     stompClient.connect({}, function (frame) {
         setConnected(true);
         console.log('Connected: ' + frame);
+        
+        $("#messageType").show();
+        $("#messageType").val("public");
+
 
         // Subscribe to both public and private message topics
         stompClient.subscribe('/topic/user', function (response) {
@@ -46,6 +52,9 @@ function disconnect() {
         stompClient.disconnect(function () {
             setConnected(false);
             stompClient = null; // Reset stompClient after disconnecting
+            $("#messageType").hide();
+            recipientInput.hide();
+            recipientText.hide();
         });
     }
     console.log("Disconnected");
@@ -74,8 +83,6 @@ function sendMessage() {
             {},
             JSON.stringify({ 'senderUsername': getUsername(), 'recipientUsername': recipient, 'message': getUsername() + " : " + message })
         );
-        // Clear the recipient input field after sending the message
-        $("#recipient").val("");
     }
 
     // Clear the message input field after sending the message
@@ -101,9 +108,7 @@ function getUsername() {
 }
 
 $(function () {
-    let recipientInput = $("#recipient");
     recipientInput.hide();
-    let recipientText = $("#recipienttext");
     recipientText.hide();
 
     $("#connect").click(function () {
