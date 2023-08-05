@@ -6,11 +6,11 @@
     <artifactId>microservicecloud</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
-	<modules>
-			<module>microservicecloud-model</module>
-			<module>microservicecloud-server</module>
-			<module>microservicecloud-front-end</module>
-	</modules>
+    <modules>
+        <module>microservicecloud-model</module>
+        <module>microservicecloud-front-end</module>
+        <module>microservicecloud-server</module>
+    </modules>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
