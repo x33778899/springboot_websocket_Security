@@ -1,4 +1,4 @@
-package com.jacob.springcloud.SecurityConstants;
+package com.jacob.springcloud.securityConstants;
 
 public enum SecurityConstants {
 
