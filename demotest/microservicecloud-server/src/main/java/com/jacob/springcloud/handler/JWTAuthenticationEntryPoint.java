@@ -12,17 +12,16 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class JWTAuthenticationEntryPoint implements AuthenticationEntryPoint {
-    @Override
-    public void commence(HttpServletRequest request,
-                         HttpServletResponse response,
-                         AuthenticationException authException) throws IOException, ServletException {
+	@Override
+	public void commence(HttpServletRequest request, HttpServletResponse response,
+			AuthenticationException authException) throws IOException, ServletException {
 
-        response.setCharacterEncoding("UTF-8");
-        response.setContentType("application/json; charset=utf-8");
-        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-        UserResponse responses = new UserResponse(); // Use UserResponse instead of Response
-        responses.setError("必須擁有token或token錯誤");
-        responses.setStatus("403");
-        response.getWriter().write(new ObjectMapper().writeValueAsString(responses));
-    }
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType("application/json; charset=utf-8");
+		response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+		UserResponse responses = new UserResponse(); // Use UserResponse instead of Response
+		responses.setError("必須擁有token或token錯誤");
+		responses.setStatus("403");
+		response.getWriter().write(new ObjectMapper().writeValueAsString(responses));
+	}
 }

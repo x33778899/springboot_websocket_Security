@@ -1,6 +1,5 @@
 package com.jacob.springcloud.controller;
 
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,65 +16,58 @@ import com.jacob.springcloud.dto.PrivateMessage;
 import com.jacob.springcloud.dto.UserMessage;
 import com.jacob.springcloud.dto.WebSocketResponse;
 
-
 @Controller
 public class WebSocketController {
-	
-	
-	
-    private final SimpMessagingTemplate messagingTemplate;
 
-    @Autowired
-    public WebSocketController(SimpMessagingTemplate messagingTemplate) {
-        this.messagingTemplate = messagingTemplate;
-    }
+	private final SimpMessagingTemplate messagingTemplate;
 
-    // 公開頻道
+	@Autowired
+	public WebSocketController(SimpMessagingTemplate messagingTemplate) {
+		this.messagingTemplate = messagingTemplate;
+	}
+
+	// 公開頻道
 	@MessageMapping("/public")
 	@SendTo("/topic/user")
 	public WebSocketResponse getUser(UserMessage user, @RequestParam("token") String token) {
-	    String message = user.getUsername() + " : " + user.getMessage();
-	    return new WebSocketResponse(message);
+		String message = user.getUsername() + " : " + user.getMessage();
+		return new WebSocketResponse(message);
 	}
-	
-
 
 	private final ObjectMapper objectMapper = new ObjectMapper();
-	
-	//私人頻道
+
+	// 私人頻道
 	@MessageMapping("/private")
 	public void sendPrivateMessage(PrivateMessage privateMessage) {
-	    String senderUsername = privateMessage.getSenderUsername();
-	    String recipientUsername = privateMessage.getRecipientUsername();
-	    String messageContent = privateMessage.getMessage();
+		String senderUsername = privateMessage.getSenderUsername();
+		String recipientUsername = privateMessage.getRecipientUsername();
+		String messageContent = privateMessage.getMessage();
 
-	    // 產生json 格式的物件
-	    Map<String, String> message = new HashMap<>();
-	    message.put("senderUsername", senderUsername);
-	    message.put("content", messageContent);
-	    
-	    // Convert the message map to JSON
-	    String jsonMessage;
-	    try {
-	        jsonMessage = objectMapper.writeValueAsString(message);
-	        System.out.println("jsonMessage	"+jsonMessage);
-	    } catch (JsonProcessingException e) {
-	        System.err.println("Error converting message to JSON: " + e.getMessage());
-	        return;
-	    }
+		// 產生json 格式的物件
+		Map<String, String> message = new HashMap<>();
+		message.put("senderUsername", senderUsername);
+		message.put("content", messageContent);
 
-	    System.out.println("Private Message: From " + senderUsername + " to " + recipientUsername + ": " + messageContent);
+		// Convert the message map to JSON
+		String jsonMessage;
+		try {
+			jsonMessage = objectMapper.writeValueAsString(message);
+			System.out.println("jsonMessage	" + jsonMessage);
+		} catch (JsonProcessingException e) {
+			System.err.println("Error converting message to JSON: " + e.getMessage());
+			return;
+		}
 
-	    // Send the private message to the recipient's WebSocket
-	    String recipientTopic = "/topic/private/" + recipientUsername;
-	    messagingTemplate.convertAndSend(recipientTopic, jsonMessage);
+		System.out.println(
+				"Private Message: From " + senderUsername + " to " + recipientUsername + ": " + messageContent);
 
-	    // Send the private message to the sender's WebSocket
-	    String senderTopic = "/topic/private/" + senderUsername;
-	    messagingTemplate.convertAndSend(senderTopic, jsonMessage);
+		// Send the private message to the recipient's WebSocket
+		String recipientTopic = "/topic/private/" + recipientUsername;
+		messagingTemplate.convertAndSend(recipientTopic, jsonMessage);
+
+		// Send the private message to the sender's WebSocket
+		String senderTopic = "/topic/private/" + senderUsername;
+		messagingTemplate.convertAndSend(senderTopic, jsonMessage);
 	}
 
-
-
-	
 }

@@ -2,18 +2,16 @@ package com.jacob.springcloud.SecurityConstants;
 
 public enum SecurityConstants {
 
-    REGISTER_URL("/register"),
-    LOGIN_URL("/login"),
-	LOGINPAGE_URL("/loginPage"),
+	REGISTER_URL("/register"), LOGIN_URL("/login"), LOGINPAGE_URL("/loginPage"),
 	WEBSOCKET_CONNECT_URL("/websocket-example/info");
 
-    private final String url;
+	private final String url;
 
-    SecurityConstants(String url) {
-        this.url = url;
-    }
+	SecurityConstants(String url) {
+		this.url = url;
+	}
 
-    public String getUrl() {
-        return url;
-    }
+	public String getUrl() {
+		return url;
+	}
 }
