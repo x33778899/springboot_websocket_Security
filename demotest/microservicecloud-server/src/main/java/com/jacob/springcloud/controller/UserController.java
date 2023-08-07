@@ -29,8 +29,7 @@ public class UserController {
 	private UserService userService;
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
-//    @Autowired
-//    private final RedisTemplate<String, Object> redisTemplate;
+
 	@Autowired
 	private RedisTokenRepository redisTokenRepository;
 
@@ -39,11 +38,6 @@ public class UserController {
 		this.redisTokenRepository = redisTokenRepository;
 	}
 
-	@GetMapping("/test")
-	public ResponseEntity<?> test(@RequestBody User user) {
-		User userContainer = new User();
-		return ResponseEntity.ok("123");
-	}
 
 	@PostMapping("/register")
 	public ResponseEntity<LoginResponse> registerUser(@RequestBody User user) {
