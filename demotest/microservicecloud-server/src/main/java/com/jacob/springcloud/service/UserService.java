@@ -9,4 +9,6 @@ public interface UserService {
 
 	User findByAccount(String account);
 
+	User findByAccountWithLock(String account);
+
 }

@@ -47,7 +47,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
 		// 放行路徑
 		if (requestURI.equals(REGISTER_URL.getUrl()) || requestURI.equals(LOGIN_URL.getUrl())
-				|| requestURI.equals(LOGINPAGE_URL.getUrl())) {
+				|| requestURI.equals(LOGINPAGE_URL.getUrl()) || requestURI.equals(ACCOUNT_CHECK_URL.getUrl())) {
 			chain.doFilter(request, response);
 			return;
 		}

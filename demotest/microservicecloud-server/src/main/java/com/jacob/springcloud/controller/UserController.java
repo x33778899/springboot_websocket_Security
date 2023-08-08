@@ -3,6 +3,7 @@ package com.jacob.springcloud.controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jacob.springcloud.config.RedisTokenRepository;
@@ -10,6 +11,7 @@ import com.jacob.springcloud.dao.UserRepository;
 import com.jacob.springcloud.dto.LoginResponse;
 import com.jacob.springcloud.model.User;
 import com.jacob.springcloud.service.UserService;
+import com.jacob.springcloud.utils.AccountLockManager;
 import com.jacob.springcloud.utils.JwtTokenUtil;
 
 import io.jsonwebtoken.Claims;
@@ -37,7 +39,6 @@ public class UserController {
 		this.userService = userService;
 		this.redisTokenRepository = redisTokenRepository;
 	}
-
 
 	@PostMapping("/register")
 	public ResponseEntity<LoginResponse> registerUser(@RequestBody User user) {
@@ -119,4 +120,40 @@ public class UserController {
 			return ResponseEntity.ok(loginResponse);
 		}
 	}
+
+	/**
+	 * 用來檢查帳號是否重複
+	 *
+	 */
+	@GetMapping("/accountcheck")
+	public ResponseEntity<LoginResponse> accountcheck(@RequestParam String account) {
+		if (AccountLockManager.isAccountLocked(account)) {
+			LoginResponse loginResponse = new LoginResponse();
+			loginResponse.setStatusCode(403); // 403: Forbidden
+			loginResponse.setErrorMessage("account already exists and is locked");
+			loginResponse.setLoginSuccess(false);
+			loginResponse.setToken(null);
+			return ResponseEntity.ok(loginResponse);
+		} else {
+			// 首先進行帳號檢查，如果存在則鎖定帳號
+			User userContainer = userService.findByAccount(account);
+			if (userContainer != null) {
+				LoginResponse loginResponse = new LoginResponse();
+				loginResponse.setStatusCode(409);
+				loginResponse.setErrorMessage("account already exists");
+				loginResponse.setLoginSuccess(false);
+				loginResponse.setToken(null);
+				return ResponseEntity.ok(loginResponse);
+			} else {
+				AccountLockManager.lockAccount(account); // Lock the account
+				LoginResponse loginResponse = new LoginResponse();
+				loginResponse.setStatusCode(200);
+				loginResponse.setErrorMessage("account not in use");
+				loginResponse.setLoginSuccess(false);
+				loginResponse.setToken(null);
+				return ResponseEntity.ok(loginResponse);
+			}
+		}
+	}
+
 }

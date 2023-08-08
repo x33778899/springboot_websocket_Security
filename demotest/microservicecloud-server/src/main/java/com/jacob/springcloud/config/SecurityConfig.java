@@ -25,7 +25,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.cors().and().csrf().disable().authorizeRequests()
 				.antMatchers(HttpMethod.POST, REGISTER_URL.getUrl(), LOGIN_URL.getUrl()).permitAll() // 登入及註冊頁面不處理
-				.antMatchers(HttpMethod.GET, LOGINPAGE_URL.getUrl(), WEBSOCKET_CONNECT_URL.getUrl()).permitAll() // authorizationProcessingPage放行
+				.antMatchers(HttpMethod.GET, LOGINPAGE_URL.getUrl(), WEBSOCKET_CONNECT_URL.getUrl(),ACCOUNT_CHECK_URL.getUrl()).permitAll() // authorizationProcessingPage放行
 				.antMatchers("/webjars/**", "/css/**", "/js/**", "/websocket-example/**", "/websocket-example")
 				.permitAll() // Allow access to webjars, CSS, and JS resources
 				.anyRequest().authenticated().and()

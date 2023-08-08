@@ -33,4 +33,11 @@ public class UserServerImpl implements UserService {
 		result = userTx.findByAccount(account);
 		return result;
 	}
+
+	@Override
+	public User findByAccountWithLock(String account) {
+		User result = null;
+		result = userTx.findByAccountWithLock(account);
+		return result;
+	}
 }
