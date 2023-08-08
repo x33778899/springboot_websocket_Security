@@ -3,7 +3,7 @@ package com.jacob.springcloud.dto;
 
 public class LoginResponse {
     private int statusCode;
-    private String errorMessage;
+    private String message;
     private boolean loginSuccess;
     private String token; 
 	public int getStatusCode() {
@@ -12,11 +12,12 @@ public class LoginResponse {
 	public void setStatusCode(int statusCode) {
 		this.statusCode = statusCode;
 	}
-	public String getErrorMessage() {
-		return errorMessage;
+
+	public String getMessage() {
+		return message;
 	}
-	public void setErrorMessage(String errorMessage) {
-		this.errorMessage = errorMessage;
+	public void setMessage(String message) {
+		this.message = message;
 	}
 	public boolean isLoginSuccess() {
 		return loginSuccess;

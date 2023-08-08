@@ -14,13 +14,9 @@ import com.jacob.springcloud.service.UserService;
 import com.jacob.springcloud.utils.AccountLockManager;
 import com.jacob.springcloud.utils.JwtTokenUtil;
 
-import io.jsonwebtoken.Claims;
-
-import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -53,7 +49,7 @@ public class UserController {
 
 			// Registration success
 			response.setStatusCode(HttpStatus.OK.value());
-			response.setErrorMessage("");
+			response.setMessage("registration success");
 			response.setLoginSuccess(true);
 			response.setToken(null);
 
@@ -65,7 +61,7 @@ public class UserController {
 
 			// Registration failure - account already exists
 			response.setStatusCode(HttpStatus.BAD_REQUEST.value());
-			response.setErrorMessage("Account already exists.");
+			response.setMessage("Account already exists.");
 			response.setLoginSuccess(false);
 			response.setToken(null);
 
@@ -77,7 +73,7 @@ public class UserController {
 
 			// Registration failure due to other errors
 			response.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-			response.setErrorMessage("Internal Server Error");
+			response.setMessage("Internal Server Error");
 			response.setLoginSuccess(false);
 			response.setToken(null);
 
@@ -95,7 +91,7 @@ public class UserController {
 			// 登入失敗的處理邏輯
 			LoginResponse loginResponse = new LoginResponse();
 			loginResponse.setStatusCode(401);
-			loginResponse.setErrorMessage("Login failed: Invalid account or password.");
+			loginResponse.setMessage("Login failed: Invalid account or password.");
 			loginResponse.setLoginSuccess(false);
 			loginResponse.setToken(null); // 登录失败时，将User设为null
 			return ResponseEntity.ok(loginResponse);
@@ -110,7 +106,7 @@ public class UserController {
 			// 登入成功的處理邏輯
 			LoginResponse loginResponse = new LoginResponse();
 			loginResponse.setStatusCode(200);
-			loginResponse.setErrorMessage("");
+			loginResponse.setMessage("");
 			loginResponse.setLoginSuccess(true);
 			loginResponse.setToken(token); // 登录成功时，设置User属性为登录用户
 
@@ -130,7 +126,7 @@ public class UserController {
 		if (AccountLockManager.isAccountLocked(account)) {
 			LoginResponse loginResponse = new LoginResponse();
 			loginResponse.setStatusCode(403); // 403: Forbidden
-			loginResponse.setErrorMessage("account already exists and is locked");
+			loginResponse.setMessage("account already exists and is locked");
 			loginResponse.setLoginSuccess(false);
 			loginResponse.setToken(null);
 			return ResponseEntity.ok(loginResponse);
@@ -140,7 +136,7 @@ public class UserController {
 			if (userContainer != null) {
 				LoginResponse loginResponse = new LoginResponse();
 				loginResponse.setStatusCode(409);
-				loginResponse.setErrorMessage("account already exists");
+				loginResponse.setMessage("account already exists");
 				loginResponse.setLoginSuccess(false);
 				loginResponse.setToken(null);
 				return ResponseEntity.ok(loginResponse);
@@ -148,7 +144,7 @@ public class UserController {
 				AccountLockManager.lockAccount(account); // Lock the account
 				LoginResponse loginResponse = new LoginResponse();
 				loginResponse.setStatusCode(200);
-				loginResponse.setErrorMessage("account not in use");
+				loginResponse.setMessage("account not in use");
 				loginResponse.setLoginSuccess(false);
 				loginResponse.setToken(null);
 				return ResponseEntity.ok(loginResponse);
