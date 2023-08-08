@@ -106,7 +106,7 @@ public class UserController {
 			// 登入成功的處理邏輯
 			LoginResponse loginResponse = new LoginResponse();
 			loginResponse.setStatusCode(200);
-			loginResponse.setMessage("");
+			loginResponse.setMessage("login success");
 			loginResponse.setLoginSuccess(true);
 			loginResponse.setToken(token); // 登录成功时，设置User属性为登录用户
 
